@@ -58,7 +58,7 @@ its trait and C<MetamodelX::ParametricSubset> at any time using C<WHY>.
 
 =head1 ROUTINES
 
-=head2 &trait_mod:\<will\>
+=head2 &trait_mod:<will>
 
 =for code :lang<perl6>
 multi sub trait_mod:<will>(Mu \T where Subset, &body_block, :$parameterize!)

@@ -56,8 +56,8 @@ Kind::Subset::Parametric is documented. You can refer to the documentation for i
 ROUTINES
 ========
 
-&trait_mod:\<will\>
--------------------
+&trait_mod:<will>
+-----------------
 
 ```perl6
 multi sub trait_mod:<will>(Mu \T where Subset, &body_block, :$parameterize!)
