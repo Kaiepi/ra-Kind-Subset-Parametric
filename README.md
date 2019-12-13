@@ -46,9 +46,9 @@ Note: while you can make generic subsets using this library, subsets cannot be p
 ```perl6
 subset Identity will parameterize -> ::T { T };
 
-proto sub is-id(Mu --> Bool:D)               {*}
-multi sub is-id(::T $ where Foo[T] --> True) { }
-multi sub is-id(Mu --> False)                { }
+proto sub is-id(Mu --> Bool:D)                    {*}
+multi sub is-id(::T $ where Identity[T] --> True) { }
+multi sub is-id(Mu --> False)                     { }
 ```
 
 Kind::Subset::Parametric is documented. You can refer to the documentation for its trait and `MetamodelX::ParametricSubset` at any time using `WHY`.
