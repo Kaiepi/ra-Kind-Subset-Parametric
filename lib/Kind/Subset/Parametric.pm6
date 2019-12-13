@@ -18,4 +18,3 @@ multi sub trait_mod:<will>(Mu \T where Subset, &body_block, :$parameterize!) is 
     marks as being parametric. The parameterized subset produced will inherit
     its refinement from the parametric subset (which is also used for
     typechecking against the unparameterized parametric subset). ]
-
