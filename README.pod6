@@ -1,5 +1,7 @@
 =begin pod
 
+[![Build Status](https://travis-ci.com/Kaiepi/p6-Kind-Subset-Parametric.svg?branch=master)](https://travis-ci.com/Kaiepi/p6-Kind-Subset-Parametric)
+
 =head1 NAME
 
 Kind::Subset::Parametric - Support for generic subsets
