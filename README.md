@@ -44,11 +44,11 @@ Kind::Subset::Parametric is a library that enhances subsets with support for par
 Note: while you can make generic subsets using this library, subsets cannot be parameterized with generics yet. Parameterizations using type captures, such as this, may not work as expected:
 
 ```perl6
-subset Identity will parameterize -> ::T { T };
+subset TypeIdentity will parameterize -> Mu ::T { T };
 
-proto sub is-id(Mu --> Bool:D)                    {*}
-multi sub is-id(::T $ where Identity[T] --> True) { }
-multi sub is-id(Mu --> False)                     { }
+proto sub is-type-id(Mu --> Bool:D)                       {*}
+multi sub is-type-id(Mu ::T $ where Identity[T] --> True) { }
+multi sub is-type-id(Mu --> False)                        { }
 ```
 
 Kind::Subset::Parametric is documented. You can refer to the documentation for its trait and `MetamodelX::ParametricSubset` at any time using `WHY`.
