@@ -72,7 +72,7 @@ The main metamethod of interest this metarole provides is `parameterize`, which 
 What all this means that the `TypedArray[Int]` parameterization from the synopsis generates a subset functionally equivalent to the one this type declaration creates:
 
 ```perl6
-subset :: of Array where Array[Int] | (Array:D & *.all ~~ Int);
+subset :: of Array where { $_ ~~ Array[Int] || ($_ ~~ Array:D && $_.all ~~ Int) };
 ```
 
 Parametric subsets can still be given a refinement (the value given to `where` in a subset declaration) when this trait is used. This gets used to handle typechecking against the subset when it has not been parameterized. If it's not desirable for a parametric subset to be possible to use without being parameterized, one way you can prevent this from happening is to give it a stubbed refinement:

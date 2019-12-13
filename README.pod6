@@ -83,7 +83,7 @@ synopsis generates a subset functionally equivalent to the one this type
 declaration creates:
 
 =for code :lang<perl6>
-subset :: of Array where Array[Int] | (Array:D & *.all ~~ Int);
+subset :: of Array where { $_ ~~ Array[Int] || ($_ ~~ Array:D && $_.all ~~ Int) };
 
 Parametric subsets can still be given a refinement (the value given to C<where>
 in a subset declaration) when this trait is used. This gets used to handle
