@@ -65,9 +65,9 @@ This trait mixes the `MetamodelX::ParametricSubset` metarole into the metaobject
 
 The main metamethod of interest this metarole provides is `parameterize`, which handles creating a new subset type upon parameterization given an arbitrary list of parameters. This is created using a name (generated similarly to how the name of a parametric role is generated), the refinee of the parametric subset, and the return value of the body block when invoked with the list of parameters as its refinement.
 
-The only other metamethod `MetamodelX::ParametricSubset` provides is `body_block`, which returns the body block it was parameterized with.
+`MetamodelX::ParametricSubset` also provides a `body_block` metamethod, which returns the body block it was parameterized with given a subset type.
 
-What all this means that the `TypedArray[Int]` parameterization from the synopsis generates a subset equivalent to the one this type declaration creates:
+What all this means that the `TypedArray[Int]` parameterization from the synopsis generates a subset functionally equivalent to the one this type declaration creates:
 
 ```perl6
 subset :: of Array where Array[Int] | (Array:D & *.all ~~ Int);
@@ -81,7 +81,7 @@ subset Identity will parameterize -> Mu \T {
 } where { ... };
 ```
 
-Refer to `t/02-will.t` for more examples.
+Refer to `t/02-will.t` for more examples of how to use this trait.
 
 AUTHOR
 ======

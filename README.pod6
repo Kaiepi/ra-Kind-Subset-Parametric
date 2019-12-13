@@ -74,11 +74,12 @@ to how the name of a parametric role is generated), the refinee of the
 parametric subset, and the return value of the body block when invoked with the
 list of parameters as its refinement.
 
-The only other metamethod C<MetamodelX::ParametricSubset> provides is
-C<body_block>, which returns the body block it was parameterized with.
+C<MetamodelX::ParametricSubset> also provides a C<body_block> metamethod, which
+returns the body block it was parameterized with given a subset type.
 
 What all this means that the C<TypedArray[Int]> parameterization from the
-synopsis generates a subset equivalent to the one this type declaration creates:
+synopsis generates a subset functionally equivalent to the one this type
+declaration creates:
 
 =for code :lang<perl6>
 subset :: of Array where Array[Int] | (Array:D & *.all ~~ Int);
@@ -95,7 +96,7 @@ subset Identity will parameterize -> Mu \T {
     T
 } where { ... };
 
-Refer to C<t/02-will.t> for more examples.
+Refer to C<t/02-will.t> for more examples of how to use this trait.
 
 =head1 AUTHOR
 
