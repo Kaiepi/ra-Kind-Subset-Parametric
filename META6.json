@@ -1,0 +1,20 @@
+{
+  "authors" : [
+    "Ben Davies"
+  ],
+  "build-depends" : [ ],
+  "depends" : [ "Kind" ],
+  "description" : "Support for parametric subsets",
+  "license" : "Artistic-2.0",
+  "name" : "Kind::Subset::Parametric",
+  "perl" : "6",
+  "provides" : {
+    "Kind::Subset::Parametric" : "lib/Kind/Subset/Parametric.pm6",
+	"MetamodelX::ParametricSubset" : "lib/MetamodelX/ParametricSubset.pm6"
+  },
+  "resources" : [ ],
+  "source-url" : "https://github.com/Kaiepi/p6-Kind-Subset-Parametric.git",
+  "tags" : [ "kind" ],
+  "test-depends" : [ "Test" ],
+  "version" : "0.0.1"
+}
