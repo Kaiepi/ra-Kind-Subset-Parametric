@@ -46,17 +46,17 @@ Note: while you can make generic subsets using this library, subsets cannot be p
 ```perl6
 subset TypeIdentity will parameterize -> Mu ::T { T };
 
-proto sub is-type-id(Mu --> Bool:D)                       {*}
-multi sub is-type-id(Mu ::T $ where Identity[T] --> True) { }
-multi sub is-type-id(Mu --> False)                        { }
+proto sub is-type-id(Mu --> Bool:D)                           {*}
+multi sub is-type-id(Mu ::T $ where TypeIdentity[T] --> True) { }
+multi sub is-type-id(Mu --> False)                            { }
 ```
 
 Kind::Subset::Parametric is documented. You can refer to the documentation for its trait and `MetamodelX::ParametricSubset` at any time using `WHY`.
 
-ROUTINES
-========
+TRAITS
+======
 
-&trait_mod:<will>
+will parameterize
 -----------------
 
 ```perl6
@@ -69,10 +69,12 @@ The main metamethod of interest this metarole provides is `parameterize`, which 
 
 `MetamodelX::ParametricSubset` also provides a `body_block` metamethod, which returns the body block it was parameterized with given a subset type.
 
-What all this means that the `TypedArray[Int]` parameterization from the synopsis generates a subset functionally equivalent to the one this type declaration creates:
+What all this means that the `TypedArray[Int:D]` parameterization from the synopsis generates a subset functionally equivalent to the one this type declaration creates:
 
 ```perl6
-subset :: of Array where { $_ ~~ Array[Int] || ($_ ~~ Array:D && $_.all ~~ Int) };
+subset :: of Array where {
+    $_ ~~ Array[Int:D] || ($_ ~~ Array:D && so $_.all ~~ Int:D)
+};
 ```
 
 Parametric subsets can still be given a refinement (the value given to `where` in a subset declaration) when this trait is used. This gets used to handle typechecking against the subset when it has not been parameterized. If it's not desirable for a parametric subset to be possible to use without being parameterized, one way you can prevent this from happening is to give it a stubbed refinement:
