@@ -8,3 +8,6 @@ v0.0.2:
 
 v0.0.3:
     - Minor documentation fixes
+
+v0.0.4:
+    - Actually bump the version from v0.0.1

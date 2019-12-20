@@ -1,7 +1,7 @@
 use v6;
 use Kind;
 use MetamodelX::ParametricSubset;
-unit module Kind::Subset::Parametric:ver<0.0.1>:auth<github:Kaiepi>:api<0>;
+unit module Kind::Subset::Parametric:ver<0.0.4>:auth<github:Kaiepi>:api<0>;
 
 my constant Subset = Kind[Metamodel::SubsetHOW];
 

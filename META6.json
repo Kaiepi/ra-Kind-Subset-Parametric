@@ -16,5 +16,5 @@
   "source-url" : "https://github.com/Kaiepi/p6-Kind-Subset-Parametric.git",
   "tags" : [ "kind" ],
   "test-depends" : [ "Test" ],
-  "version" : "0.0.1"
+  "version" : "0.0.4"
 }
