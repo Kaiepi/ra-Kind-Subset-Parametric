@@ -25,7 +25,7 @@ method body_block(::?CLASS:D: Mu $ where Kind[self] --> Callable:D) {
     mixed into. This simply invokes `produce_parameterization` with the
     arguments given to `parameterize` whenever it gets called. ]
 method parameterization_setup(::?CLASS:D: Mu \PS where Kind[self] --> Mu) {
-    nqp::setparameterizer(PS, sub SUBSET_PARAMETERIZER(Mu \PS where Kind[self], @parameters) {
+    Metamodel::Primitives.set_parameterizer(PS, sub SUBSET_PARAMETERIZER(Mu \PS where Kind[self], @parameters) {
         my (@positional, %named) := (@parameters[0...*-2], @parameters[*-1]);
         PS.HOW.produce_parameterization: PS, |@positional, |%named
     })
