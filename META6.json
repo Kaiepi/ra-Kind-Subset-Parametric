@@ -16,5 +16,7 @@
   "source-url" : "https://github.com/Kaiepi/ra-Kind-Subset-Parametric.git",
   "tags" : [ "kind" ],
   "test-depends" : [ "Test" ],
-  "version" : "0.0.4"
+  "version" : "0.0.5",
+  "auth" : "github:Kaiepi",
+  "api" : "0"
 }
