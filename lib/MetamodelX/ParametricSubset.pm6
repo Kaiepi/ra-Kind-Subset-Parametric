@@ -1,5 +1,4 @@
 use v6;
-use nqp;
 use Kind;
 #|[ This implements support for subset parameterization as a parametric role
     to be mixed into a subset's HOW. Parameterizations of this metarole just
@@ -40,9 +39,10 @@ method produce_parameterization(::?CLASS:D: Mu \PS where Kind[self], |parameters
 }
 
 sub NAME(Mu $obj is raw --> Str:D) {
-     (do (try $obj.raku) if nqp::can($obj, 'raku'))
-  // (do $obj.^name if nqp::can($obj.HOW, 'name'))
-  // '?'
+    use nqp;
+    (do try $obj.raku if nqp::can($obj, 'raku')) //
+    (do $obj.^name if nqp::can($obj.HOW, 'name')) //
+    '?'
 }
 
 #|[ Given a metaobject and an arbitrary list of parameters, produces a
@@ -51,8 +51,5 @@ sub NAME(Mu $obj is raw --> Str:D) {
     a refinement for the parameterized subset, which inherits its refinee
     from the original subset. ]
 method parameterize(::?CLASS:D: Mu \PS where Kind[self], |parameters --> Mu) {
-    my Mu $parameters := nqp::list();
-    nqp::push($parameters, $_<>) for parameters.list;
-    nqp::push($parameters, $_) given parameters.hash.map({ .key => .value<> }).hash;
-    nqp::parameterizetype(PS, $parameters);
+    Metamodel::Primitives.parameterize_type: PS, |@(parameters), %(parameters)
 }
