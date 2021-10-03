@@ -33,16 +33,16 @@ method parameterization_setup(::?CLASS:D: Mu \PS where Kind[self] --> Mu) {
 
 #|[ Internal method that does the actual work for `parameterize`. ]
 method produce_parameterization(::?CLASS:D: Mu \PS where Kind[self], |parameters --> Mu) {
-    sub name-of(Mu $obj is raw --> Str:D) {
-         (do (try $obj.perl) if nqp::hllbool(nqp::can($obj, 'perl')))
-      // (do $obj.HOW.name($obj) if nqp::hllbool(nqp::can($obj.HOW, 'name')))
-      // '?'
-    }
-
-    my Str:D $name       := PS.^name ~ '[' ~ parameters.list.map({ name-of $_ }).join(', ') ~ ']';
+    my Str:D $name       := PS.^name ~ '[' ~ parameters.list.map(&NAME).join(', ') ~ ']';
     my Mu    $refinee    := PS.^refinee;
     my Mu    $refinement := PS.^body_block.(|parameters);
     self.new_type: :$name, :$refinee, :$refinement
+}
+
+sub NAME(Mu $obj is raw --> Str:D) {
+     (do (try $obj.raku) if nqp::can($obj, 'raku'))
+  // (do $obj.^name if nqp::can($obj.HOW, 'name'))
+  // '?'
 }
 
 #|[ Given a metaobject and an arbitrary list of parameters, produces a
