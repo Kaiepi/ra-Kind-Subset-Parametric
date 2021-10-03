@@ -1,4 +1,4 @@
-![Build Status](https://github.com/Kaiepi/ra-Kind-Subset-Parametric/actions/workflows/test.yml/badge.svg)
+[![Build Status](https://github.com/Kaiepi/ra-Kind-Subset-Parametric/actions/workflows/test.yml/badge.svg)](https://github.com/Kaiepi/ra-Kind-Subset-Parametric/actions/workflows/test.yml)
 
 NAME
 ====
