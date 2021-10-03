@@ -13,7 +13,7 @@
 	"MetamodelX::ParametricSubset" : "lib/MetamodelX/ParametricSubset.pm6"
   },
   "resources" : [ ],
-  "source-url" : "https://github.com/Kaiepi/p6-Kind-Subset-Parametric.git",
+  "source-url" : "https://github.com/Kaiepi/ra-Kind-Subset-Parametric.git",
   "tags" : [ "kind" ],
   "test-depends" : [ "Test" ],
   "version" : "0.0.4"

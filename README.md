@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Kaiepi/p6-Kind-Subset-Parametric.svg?branch=master)](https://travis-ci.com/Kaiepi/p6-Kind-Subset-Parametric)
+[![Build Status](https://travis-ci.com/Kaiepi/ra-Kind-Subset-Parametric.svg?branch=master)](https://travis-ci.com/Kaiepi/ra-Kind-Subset-Parametric)
 
 NAME
 ====
