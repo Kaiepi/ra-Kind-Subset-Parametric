@@ -8,7 +8,7 @@ Kind::Subset::Parametric - Support for generic subsets
 
 =head1 SYNOPSIS
 
-=begin code :lang<perl6>
+=begin code :lang<raku>
 use Kind::Subset::Parametric;
 
 # Arrays don't type their elements by default:
@@ -20,84 +20,74 @@ my Int:D @typed = 1, 2, 3;
 say @typed.^name; # OUTPUT: Array[Int:D]
 
 # But you can't typecheck untyped arrays using these parameterizations:
-say @typed   ~~ Array[Int:D]; # OUTPUT: True
+say @typed ~~ Array[Int:D];   # OUTPUT: True
 say @untyped ~~ Array[Int:D]; # OUTPUT: False
 
 # So let's make our own array type that handles this using a parametric subset:
-subset TypedArray of Array will parameterize -> Mu ::T { Array:_ \array {
-    array ~~ Array[T] || (array ~~ Array:D && so array.all ~~ T)
-} } where { ... };
+subset TypedArray of Array will parameterize -> ::T {
+    proto sub check(Array) {*}
+    multi sub check(Array[T] --> True) { }
+    multi sub check(Array:U --> False) { }
+    multi sub check(Array:D $topic) { so $topic.all ~~ T }
+    &check
+} where { !!! };
 
 # Now they can both be typechecked:
 given TypedArray[Int:D] -> \IntArray {
-    say @typed        ~~ IntArray; # OUTPUT: True
-    say @untyped      ~~ IntArray; # OUTPUT: True
+    say @typed ~~ IntArray;        # OUTPUT: True
+    say @untyped ~~ IntArray;      # OUTPUT: True
     say <foo bar baz> ~~ IntArray; # OUTPUT: False
 }
 =end code
 
 =head1 DESCRIPTION
 
-Kind::Subset::Parametric is a library that enhances subsets with support for
-parameterization. This allows you to easily implement your own generic subsets.
+C<Kind::Subset::Parametric> enhances subsets with support for parameterization.
+This allows you to write subsets with generic C<where> clauses.
 
-Note: while you can make generic subsets using this library, subsets cannot be
-parameterized with generics yet. Parameterizations using type captures, such as
-this, may not work as expected:
-
-=begin code :lang<perl6>
-subset TypeIdentity will parameterize -> Mu ::T { T };
-
-proto sub is-type-id(Mu --> Bool:D)                           {*}
-multi sub is-type-id(Mu ::T $ where TypeIdentity[T] --> True) { }
-multi sub is-type-id(Mu --> False)                            { }
-=end code
-
-Kind::Subset::Parametric is documented. You can refer to the documentation for
-its trait and C<MetamodelX::ParametricSubset> at any time using C<WHY>.
+C<Kind::Subset::Parametric> is documented. You can refer to the documentation
+for its trait and C<MetamodelX::ParametricSubset> at any time using C<WHY>.
 
 =head1 TRAITS
 
 =head2 will parameterize
 
-=for code :lang<perl6>
-multi sub trait_mod:<will>(Mu \T where Subset, &body_block, :$parameterize!)
+=for code :lang<raku>
+multi sub trait_mod:<will>(Mu \T where Subset, &body_block, :parameterize($)!)
 
 This trait mixes the C<MetamodelX::ParametricSubset> metarole into the
-metaobject of the type this trait is used with (which may only be a subset of
-some sort) after parameterizing it with C<&body_block>. This makes it possible
-to use the subset as a parametric type.
+HOW of the type it is applied to, which may only be a subset of some sort.
+Afterwards, the subset will be instantiated with its C<&body_block>, which is
+what makes it possible to parameterize the subset.
 
 The main metamethod of interest this metarole provides is C<parameterize>,
-which handles creating a new subset type upon parameterization given an
-arbitrary list of parameters. This is created using a name (generated similarly
-to how the name of a parametric role is generated), the refinee of the
-parametric subset, and the return value of the body block when invoked with the
-list of parameters as its refinement.
+which accepts arbitrary type argumentss. This is created using a name
+(generated similarly to how the name of a parametric role is generated), the
+refinee of the parametric subset (the value of C<of>), and the return value of
+the body block when invoked with the arguments as its refinement (the value of
+C<where>).
 
-C<MetamodelX::ParametricSubset> also provides a C<body_block> metamethod, which
+For example, given an identity type:
+
+=for code :lang<raku>
+subset Identity will parameterize { $_ } where { !!! };
+
+C<Identity[Any]> may be written to produce:
+
+=for code :lang<raku>
+subset ::('Identity[Any]') where Any;
+
+Note the stubbed C<where> clause. Parametric subsets can still be given a
+refinement when this trait is applied, which handles typechecking against the
+subset when it has not been parameterized. If it's not desirable for a
+parametric subset to typecheck without being parameterized, the C<!!!> stub
+will throw. Historically, C<...> was used, but failures don't necessarily sink
+when the typechecker's nqp is involved.
+
+The body block may be introspected with the C<body_block> metamethod, which
 returns the body block it was parameterized with given a subset type.
-
-What all this means that the C<TypedArray[Int:D]> parameterization from the
-synopsis generates a subset functionally equivalent to the one this type
-declaration creates:
-
-=for code :lang<perl6>
-subset :: of Array where {
-    $_ ~~ Array[Int:D] || ($_ ~~ Array:D && so $_.all ~~ Int:D)
-};
-
-Parametric subsets can still be given a refinement (the value given to C<where>
-in a subset declaration) when this trait is used. This gets used to handle
-typechecking against the subset when it has not been parameterized. If it's not
-desirable for a parametric subset to be possible to use without being
-parameterized, one way you can prevent this from happening is to give it a
-stubbed refinement:
-
-=for code :lang<perl6>
-subset Identity will parameterize -> Mu \T {
-    T
-} where { ... };
+C<set_body_block> must be called after being instantiated either by mixin on a
+HOW or by C«&trait_mod:<does>» in order to replace this.
 
 Refer to C<t/02-will.t> for more examples of how to use this trait.
 
@@ -107,7 +97,7 @@ Ben Davies (Kaiepi)
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2019 Ben Davies
+Copyright 2022 Ben Davies
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
