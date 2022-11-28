@@ -8,8 +8,8 @@ subset SpeedLimit of Numeric where 0..110;
 
 lives-ok {
     my &body_block = { 0..$_ };
-    SpeedLimit.HOW.^mixin: MetamodelX::ParametricSubset.^parameterize: &body_block;
-    SpeedLimit.^parameterization_setup;
+    SpeedLimit.HOW.^mixin: MetamodelX::ParametricSubset;
+    SpeedLimit.^set_body_block: &body_block;
 }, 'can mark a subset as being parametric';
 
 cmp-ok SpeedLimit.^refinee, '=:=', Numeric,

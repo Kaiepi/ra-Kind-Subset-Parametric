@@ -5,7 +5,9 @@ use Kind;
     take a routine of some sort, which may take an arbitrary list of parameters
     and returns a refinement for a paremeterized subset, as its only type
     parameter. ]
-unit role MetamodelX::ParametricSubset[&body_block];
+unit role MetamodelX::ParametricSubset;
+
+has &!body_block;
 
 my $archetyped is default(False);
 my $archetypes;
@@ -19,42 +21,85 @@ method archetypes(::?CLASS:D: Mu $? --> Metamodel::Archetypes:D) {
         nqp::p6bindattrinvres(nqp::clone((callsame)),Metamodel::Archetypes,'$!parametric',1)))
 }
 
-#|[ Given a metaobject, returns the body block this metarole was parameterized
-    with. ]
-method body_block(::?CLASS:D: Mu $ where Kind[self] --> Callable:D) {
-    &body_block
+#|[ A block to parameterize over. ]
+method body_block(::?CLASS:D: Mu --> Callable:D) {
+    &!body_block
 }
 
-#|[ Internal method that sets the parameterizer for the HOW this metarole gets
-    mixed into. This simply invokes `produce_parameterization` with the
-    arguments given to `parameterize` whenever it gets called. ]
-method parameterization_setup(::?CLASS:D: Mu \PS where Kind[self] --> Mu) {
-    Metamodel::Primitives.set_parameterizer(PS, sub SUBSET_PARAMETERIZER(Mu \PS where Kind[self], @parameters) {
-        my (@positional, %named) := (@parameters[0...*-2], @parameters[*-1]);
-        PS.HOW.produce_parameterization: PS, |@positional, |%named
-    })
+#|[ Sets the block to parameterize over. ]
+method set_body_block(::?CLASS:D: Mu, &body_block --> Callable:D) {
+    &!body_block := &body_block<>
 }
 
-#|[ Internal method that does the actual work for `parameterize`. ]
-method produce_parameterization(::?CLASS:D: Mu \PS where Kind[self], |parameters --> Mu) {
-    my Str:D $name       := PS.^name ~ '[' ~ parameters.list.map(&NAME).join(', ') ~ ']';
-    my Mu    $refinee    := PS.^refinee;
-    my Mu    $refinement := PS.^body_block.(|parameters);
-    self.new_type: :$name, :$refinee, :$refinement
+# Surprise! We can cache captures by pointer. This differs from the role
+# parameterization in that named arguments don't automatically invalidate any
+# cache. We take advantage of the parameterizer's object buffer like a packet:
+#
+# ┏━━━━━━━━━━━━━━━━━━━━━━━┉
+# ┃ O ┃ [ P ]* ┃ [ K | V ]*
+# ┗━━━━━━━━━━━━━━━━━━━━━━━┉
+#
+# Where:
+# O: Cached offset of named argument list
+# P: Positional argument
+# K: Cached named argument name
+# V: Named argument value
+#
+# Positional arguments are flat and should be countable from a capture. Named
+# arguments make a map instead, but can be a flat list of transposed keys and
+# values on the condition that the keys are cached and sorted lexographically.
+my package Jail {
+    my $house := Lock.new;
+    my %ident;
+    my %label;
+
+    sub number(Int:D $id --> Int:D) {
+        %ident.AT-KEY: $id
+            orelse %ident.BIND-KEY: $id, $id<>
+    }
+
+    sub label(Str:D $name --> Str:D) {
+        %label.AT-KEY: $name
+            orelse %label.BIND-KEY: $name, $name<>
+    }
+
+    our sub house(Capture:D $args) is raw {
+        my @args := @$args;
+        my %args := %$args;
+        $house.protect({
+            Metamodel::Primitives.parameterize_type:
+                $?PACKAGE,
+                number(@args.elems.succ),
+                |@args,
+                |%args.keys.sort(&infix:<leg>).map({ slip label($_), %args.AT-KEY($_) })
+        })
+    }
+
+    sub parameterize(Mu, Mu $args) {
+        my $divider    := $args[0];
+        my $obj        := $args[1];
+        my $positional := $args[2..^$divider];
+        my $named      := Map.new.STORE: $args.skip($divider), :INITIALIZE;
+        my $how        := $obj.HOW;
+        my $name       := $how.name($obj) ~ '[' ~ $positional.map(&name).join(', ') ~ ']';
+        my $refinee    := $how.refinee($obj);
+        my $refinement := $how.body_block($obj).(|$positional, |$named);
+        Metamodel::SubsetHOW.new_type: :$name, :$refinee, :$refinement
+    }
+
+    sub name(Mu $obj is raw --> Str:D) {
+        use nqp;
+        (try $obj.raku if nqp::can($obj, 'raku'))
+            orelse ($obj.^name if nqp::can($obj.HOW, 'name'))
+            orelse '?'
+    }
+
+    BEGIN Metamodel::Primitives.set_parameterizer: $?PACKAGE, &parameterize;
 }
 
-sub NAME(Mu $obj is raw --> Str:D) {
-    use nqp;
-    (do try $obj.raku if nqp::can($obj, 'raku')) //
-    (do $obj.^name if nqp::can($obj.HOW, 'name')) //
-    '?'
-}
-
-#|[ Given a metaobject and an arbitrary list of parameters, produces a
-    parameterization of the subset whose HOW this metarole gets mixed into
-    using the body block the metarole was parameterized with. This generates
-    a refinement for the parameterized subset, which inherits its refinee
-    from the original subset. ]
-method parameterize(::?CLASS:D: Mu \PS where Kind[self], |parameters --> Mu) {
-    Metamodel::Primitives.parameterize_type: PS, |@(parameters), %(parameters)
+#|[ Given a metaobject and arbitrary arguments, produces a parameterization of
+    the subset whose HOW this metarole gets mixed into using its body block.
+    This generates a refinement for a new subset produced with its refinee. ]
+method parameterize(::?CLASS:D: |args) is raw {
+    Jail::house(args)
 }
