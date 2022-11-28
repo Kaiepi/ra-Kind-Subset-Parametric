@@ -7,11 +7,16 @@ use Kind;
     parameter. ]
 unit role MetamodelX::ParametricSubset[&body_block];
 
+my $archetyped is default(False);
+my $archetypes;
 #|[ Returns the archetypes for a parametric subset. ]
-method archetypes(::?CLASS:_: --> Metamodel::Archetypes:D) {
-    state Metamodel::Archetypes:D $archetypes .= new:
-        nominalizable => 1,
-        parametric    => 1;
+method archetypes(::?CLASS:D: Mu $? --> Metamodel::Archetypes:D) {
+    use nqp;
+    nqp::if(
+      nqp::cas($archetyped,False,True),
+      nqp::atomicload($archetypes),
+      nqp::atomicstore($archetypes,
+        nqp::p6bindattrinvres(nqp::clone((callsame)),Metamodel::Archetypes,'$!parametric',1)))
 }
 
 #|[ Given a metaobject, returns the body block this metarole was parameterized
