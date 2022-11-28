@@ -7,7 +7,7 @@ plan 4;
 subtest 'identity', {
     my subset Identity will parameterize -> Mu \T {
         T
-    } where { ... };
+    } where { !!! };
 
     plan 3;
 
@@ -25,7 +25,7 @@ subtest 'identity', {
 subtest 'typed arrays', {
     my subset TypedArray of Array will parameterize -> Mu ::T { -> Array \array {
         array ~~ Array[T] || (array ~~ Array:D && so array.all ~~ T)
-    } } where { ... };
+    } } where { !!! };
 
     plan 5;
 
@@ -50,7 +50,7 @@ subtest 'typed arrays', {
 subtest 'failable', {
     my subset Failable will parameterize -> Mu \T {
         T | Failure:D
-    } where { ... };
+    } where { !!! };
 
     plan 4;
 
@@ -75,7 +75,7 @@ subtest 'failable', {
 subtest 'contravariance', {
     my subset Contravariant will parameterize -> Mu ::T { -> Mu ::U {
         Metamodel::Primitives.is_type: T, U
-    } } where { ... };
+    } } where { !!! };
 
     my class Animal {
         proto method in-group(::?CLASS:_: Mu $ --> Bool:D)               {*}
