@@ -1,4 +1,4 @@
-use v6;
+use v6.e.PREVIEW;
 use Kind:auth<zef:Kaiepi>:api<2>;
 use MetamodelX::ParametricSubset;
 unit module Kind::Subset::Parametric:ver<0.0.5>:auth<github:Kaiepi>:api<0>;

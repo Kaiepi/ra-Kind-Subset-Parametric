@@ -7,7 +7,7 @@
   "description" : "Support for parametric subsets",
   "license" : "Artistic-2.0",
   "name" : "Kind::Subset::Parametric",
-  "perl" : "6",
+  "perl" : "6.e.PREVIEW",
   "provides" : {
     "Kind::Subset::Parametric" : "lib/Kind/Subset/Parametric.pm6",
 	"MetamodelX::ParametricSubset" : "lib/MetamodelX/ParametricSubset.pm6"

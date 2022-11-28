@@ -1,4 +1,4 @@
-use v6;
+use v6.e.PREVIEW;
 use Kind;
 #|[ This implements support for subset parameterization as a parametric role
     to be mixed into a subset's HOW. Parameterizations of this metarole just
