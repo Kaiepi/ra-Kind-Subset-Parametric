@@ -1,7 +1,5 @@
 {
-  "authors" : [
-    "Ben Davies"
-  ],
+  "authors" : [ "Ben Davies" ],
   "build-depends" : [ ],
   "depends" : [ "Kind:auth<zef:Kaiepi>:api<2>" ],
   "description" : "Support for parametric subsets",
@@ -16,7 +14,7 @@
   "source-url" : "https://github.com/Kaiepi/ra-Kind-Subset-Parametric.git",
   "tags" : [ "kind" ],
   "test-depends" : [ "Test" ],
-  "version" : "0.0.5",
-  "auth" : "github:Kaiepi",
-  "api" : "0"
+  "version" : "1.0.0",
+  "auth" : "zef:Kaiepi",
+  "api" : "1"
 }

@@ -15,3 +15,11 @@ v0.0.4:
 v0.0.5:
     - De-nqp-ify parameterization in order to be compatible with upcoming
       changes to dispatch.
+
+v1.0.0:
+    - Give MetamodelX::ParametricSubset.archetyeps its optional metaobject.
+    - Remove the body block type parameter of MetamodelX::ParametricSubset in
+      favour of ^set_body_block.
+    - Stop setting the parameterizer on the Metamodel::SubsetHOW base of a
+      MetamodelX::ParametricSubset mixin.
+    - Make parameterizations of subsets cacheable by value.

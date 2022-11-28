@@ -1,7 +1,7 @@
 use v6.e.PREVIEW;
 use Kind:auth<zef:Kaiepi>:api<2>;
 use MetamodelX::ParametricSubset;
-unit module Kind::Subset::Parametric:ver<0.0.5>:auth<github:Kaiepi>:api<0>;
+unit module Kind::Subset::Parametric:ver<1.0.0>:auth<zef:Kaiepi>:api<1>;
 
 #|[ Performs a mixin of MetamodelX::ParametricSubset on a subset. ]
 multi sub trait_mod:<will>(Kind[Metamodel::SubsetHOW:D] \T, &body_block, :parameterize($)! --> Nil) is export {
