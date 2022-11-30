@@ -3,7 +3,7 @@ use Kind;
 use MetamodelX::ParametricSubset;
 unit module Kind::Subset::Parametric:ver<0.0.5>:auth<github:Kaiepi>:api<0>;
 
-my constant Subset = Kind[Metamodel::SubsetHOW];
+my constant Subset = Kind[Metamodel::SubsetHOW:D];
 
 #|[ Given an additional body block argument, mixes in the
     MetamodelX::ParametricSubset role parameterized with said body block to
