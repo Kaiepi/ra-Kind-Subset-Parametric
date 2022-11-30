@@ -83,7 +83,7 @@ my package Jail {
         my $how        := $obj.HOW;
         my $name       := $how.name($obj) ~ '[' ~ $positional.map(&name).join(', ') ~ ']';
         my $refinee    := $how.refinee($obj);
-        my $refinement := $how.body_block($obj).(|$positional, |$named);
+        my $refinement := fun $how.body_block($obj).(|$positional, |$named);
         Metamodel::SubsetHOW.new_type: :$name, :$refinee, :$refinement
     }
 
@@ -92,6 +92,15 @@ my package Jail {
         (try $obj.raku if nqp::can($obj, 'raku'))
             orelse ($obj.^name if nqp::can($obj.HOW, 'name'))
             orelse '?'
+    }
+
+    # We need to wrap uninvokable refinements to appease Rakudo's internals.
+    proto sub fun(Mu) is raw {*}
+    multi sub fun(Mu $check is raw) {
+        anon sub accepts(Mu $topic is raw) { $check.ACCEPTS: $topic }
+    }
+    multi sub fun(Code:D $code) {
+        $code<>
     }
 
     BEGIN Metamodel::Primitives.set_parameterizer: $?PACKAGE, &parameterize;

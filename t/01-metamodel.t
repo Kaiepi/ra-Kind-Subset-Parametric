@@ -20,9 +20,9 @@ is SpeedLimit.^name, 'SpeedLimit',
 my \SlowDownBuddy = SpeedLimit.^parameterize: 1_000_000;
 cmp-ok SlowDownBuddy.^refinee, '=:=', SpeedLimit.^refinee,
   'parameterized subsets keep their original refinee';
-cmp-ok SlowDownBuddy.^refinement, '===', 0..1_000_000,
+cmp-ok (0..1_000_000), &[~~], SlowDownBuddy.^refinement,
   'parameterized subsets have an appropriate refinement';
-is SlowDownBuddy.^name, SpeedLimit.^name ~ '[1000000]',
+is SlowDownBuddy.^name, SpeedLimit.^name ~ '[' ~ 1_000_000.raku ~ ']',
   'parameterized subsets have an appropriate name';
 
 cmp-ok 1, &[~~], SlowDownBuddy,
