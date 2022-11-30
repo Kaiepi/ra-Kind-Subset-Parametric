@@ -108,4 +108,4 @@ subtest 'contravariance', {
 #     '...but not raccoons';
 };
 
-# vim: ft=perl6 sw=4 ts=4 sts=4 et
+# vim: ft=raku sw=4 ts=4 sts=4 et
