@@ -78,34 +78,40 @@ subtest 'contravariance', {
     } } where { !!! };
 
     my class Animal {
-        proto method in-group(::?CLASS:_: Mu $ --> Bool:D)               {*}
+        proto method in-group(::?CLASS:_: Mu --> Bool:D)                 {*}
         multi method in-group(::T: Mu $ where Contravariant[T] --> True) { }
-        multi method in-group(::?CLASS:_: Mu $ --> False)                { }
+        multi method in-group(::?CLASS:_: Mu --> False)                  { }
     }
-    my class Mammal      is Animal { }
-    my class Raccoon     is Mammal { }
-    my class Cat         is Mammal { }
-    my class RussianBlue is Cat    { }
+
+    my class Mammal is Animal { }
+
+    my class Raccoon is Mammal { }
+
+    my class Cat is Mammal { }
+
+    my class RussianBlue is Cat { }
 
     plan 7;
 
     dies-ok { Any ~~ Contravariant },
       'typechecking with an unparameterized Contravariant throws';
 
-    skip-rest 'generics are not supported to the degree necessary for these tests';
-
-#   nok Mammal.in-group(Raccoon),
-#     'mammals are not always raccoons...';
-#   nok Mammal.in-group(Cat),
-#     '...or cats...';
-#   ok Cat.in-group(Mammal),
-#     '...but cats are mammals...';
-#   ok Raccoon.in-group(Mammal),
-#     '...alongside raccoons...';
-#   ok RussianBlue.in-group(Cat),
-#     '...and Russian blue cats are cats...';
-#   nok RussianBlue.in-group(Raccoon),
-#     '...but not raccoons';
+    if $*RAKU.compiler.version < v2022.12 {
+        skip-rest 'generics support required NYI';
+    } else {
+        nok Mammal.in-group(Raccoon),
+          'mammals are not always raccoons...';
+        nok Mammal.in-group(Cat),
+          '...or cats...';
+        ok Cat.in-group(Mammal),
+          '...but cats are mammals...';
+        ok Raccoon.in-group(Mammal),
+          '...alongside raccoons...';
+        ok RussianBlue.in-group(Cat),
+          '...and Russian blue cats are cats...';
+        nok RussianBlue.in-group(Raccoon),
+          '...but not raccoons';
+    }
 };
 
 # vim: ft=raku sw=4 ts=4 sts=4 et
