@@ -3,7 +3,7 @@
     "Ben Davies"
   ],
   "build-depends" : [ ],
-  "depends" : [ "Kind" ],
+  "depends" : [ "Kind:auth<zef:Kaiepi>:api<2>" ],
   "description" : "Support for parametric subsets",
   "license" : "Artistic-2.0",
   "name" : "Kind::Subset::Parametric",

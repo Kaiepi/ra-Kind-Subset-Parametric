@@ -1,12 +1,10 @@
 use v6;
-use Kind;
+use Kind:auth<zef:Kaiepi>:api<2>;
 use MetamodelX::ParametricSubset;
 unit module Kind::Subset::Parametric:ver<0.0.5>:auth<github:Kaiepi>:api<0>;
 
-my constant Subset = Kind[Metamodel::SubsetHOW:D];
-
 #|[ Performs a mixin of MetamodelX::ParametricSubset on a subset. ]
-multi sub trait_mod:<will>(Mu \T where Subset, &body_block, :parameterize($)! --> Nil) is export {
+multi sub trait_mod:<will>(Kind[Metamodel::SubsetHOW:D] \T, &body_block, :parameterize($)! --> Nil) is export {
     T.HOW.^mixin: MetamodelX::ParametricSubset unless MetamodelX::ParametricSubset.ACCEPTS: T.HOW;
     T.^set_body_block: &body_block;
 }
